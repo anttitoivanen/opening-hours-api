@@ -20,7 +20,7 @@ def parse_opening():
 	try:
 		data = parser.validate_input(request.json)
 	except ValueError as e:
-		message = f'Error: {str(e)}'
+		message = f'Error: {e}'
 		return make_response(message , 400)
 	parsed = parser.parse_input(data)
 	result = parser.format_output(parsed)
