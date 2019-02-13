@@ -11,7 +11,7 @@ Parse restaurant opening hour data from json into a human-readable plaintext for
 
 ## Running
 
-The project is built with flask, and can be run with e.g. `FLASK_APP=src/api.py flask run` in the root directory.
+The project is built with flask, and can be run with e.g. `FLASK_APP=src/api.py flask run` in the root directory. The service then accepts HTTP POST requests at http://localhost:5000/parse_opening
 
 ## Testing
 
