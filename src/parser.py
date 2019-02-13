@@ -30,6 +30,16 @@ class Parser:
 	def __init__(self):
 		pass
 
+	def validate_event(self, event, latest_type):
+		# Check attributes and their values for an individual entry in the data
+		if not event['type'] or event['type'] not in ['open', 'close']:
+			raise ValueError("Event must have either 'open' or 'close' as type")
+		if not 0 < int(event['value']) < 86399:
+			raise ValueError(f'Timestamp should be in range [0, 86399], got {event["value"]}')
+		if event['type'] == latest_type:
+			raise ValueError(f"Can not have two '{latest_type}' events in a row")
+		return event['type']
+
 	def validate_input(self, data):
 		# Make sure the input data matches our expectations
 		first_type = None
@@ -39,18 +49,16 @@ class Parser:
 				raise ValueError(f'No times found for {day}')
 			try:
 				data[day].sort(key=lambda event: event['value'])
-				for event in data[day]:
-					if first_type is None:
-						first_type = event['type']
-					if not 0 < event['value'] < 86399:
-						raise ValueError(f'Timestamp should be in range [0, 86399], got {timestamp}.')
-					if event['type'] == latest_type:
-						raise ValueError(f'Can not have two {latest_event} events in a row on {day}.')
-					latest_type = event['type']
 			except KeyError as key:
 				raise ValueError(f'Missing key {key} for event on {day}')
+			except TypeError:
+				raise TypeError('Timestamp must be an integer')
+			for event in data[day]:
+				latest_type = self.validate_event(event, latest_type)
+				if first_type is None:
+					first_type = event['type']
 		if first_type == latest_type:
-			raise ValueError(f'Can not both start and end the week with an event of the same type')
+			raise ValueError('Can not both start and end the week with an event of the same type')
 		return data
 
 	def parse_input(self, data):
