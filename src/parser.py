@@ -79,7 +79,7 @@ class Parser:
 						times[opening_day].append(format_range(current_opening, closing_time))
 					else:
 						dangling_close = closing_time
-		if current_opening and dangling_close:
+		if dangling_close:
 			times[WEEKDAYS[-1]].append(format_range(current_opening, dangling_close))
 		return times
 
