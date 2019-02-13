@@ -26,9 +26,13 @@ def parse_opening():
 	result = parser.format_output(parsed)
 	return make_response(result, 200)
 
+@app.errorhandler(400)
+def bad_request(error):
+	return make_response('Bad request', 400)
+
 @app.errorhandler(405)
 def method_not_alowed(error):
-	return make_response('Method not allowed')
+	return make_response('Method not allowed', 405)
 
 @app.errorhandler(500)
 def internal_error(error):
